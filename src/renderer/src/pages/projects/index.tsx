@@ -26,7 +26,7 @@ import {
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { toast } from "sonner";
-import { FilePlusIcon, ReloadIcon, TrashIcon } from "@radix-ui/react-icons";
+import { ExternalLinkIcon, FilePlusIcon, ReloadIcon, TrashIcon } from "@radix-ui/react-icons";
 
 import { useAppContext, useI18n } from "@src/renderer/src/app-context";
 import { cn } from "@renderer/lib/utils";
@@ -208,75 +208,76 @@ export const Component: React.FC = () => {
           const { name, path, version } = row.original;
           return (
             <>
-             <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button size="sm" variant="tag">
-                  <TrashIcon />
-                  {i18n("Remove")}
-                </Button>
-              </AlertDialogTrigger>
-             
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>{name}</AlertDialogTitle>
-                  <AlertDialogDescription>{i18n("Project-Delete")}</AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>{i18n("Cancel")}</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={async () => {
-                      const [newProjects, newGroups] = await Promise.all([
-                        (async () => {
-                          const newProjects = projects.filter(
-                            ({ path: source }) => source !== path
-                          );
-                          await window.Context.updateProjects(newProjects, path);
-                          return newProjects;
-                        })(),
-                        (async () => {
-                          const newGroups = [...groups];
-                          let needUpdate: boolean = false;
-                          newGroups.forEach((group) => {
-                            if (group.name === version) {
-                              needUpdate = true;
-                              const projects = [...group.projects];
-                              group.projects = projects.filter((proPath) => proPath !== path);
-                            }
-                          });
-                          needUpdate && (await window.Context.onGroupUpdate(newGroups));
-                          return needUpdate ? newGroups : undefined;
-                        })()
-                      ]);
-                      setProjects(newProjects);
-                      newGroups && setGroups(newGroups);
-                    }}
-                  >
-                    {i18n("OK")}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-                <Button
-                  size="sm"
-                  variant="tag"
-                  onClick={async () => {
-                    try {
-                      await window.Context.openExplorer(row.original.path)
-                    } catch (err) {
-                      toast.error(
-                        err.message
-                          ? err.message.split("Error invoking remote method 'open-explorer': ").slice(-1)
-                          : "Something went wrong"
-                      );
-                    }
-                  }}
-                >
-                  <TrashIcon />
-                  {i18n("OpenExplorer")}
-                </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button size="sm" variant="tag">
+                    <TrashIcon />
+                    {i18n("Remove")}
+                  </Button>
+                </AlertDialogTrigger>
+
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{name}</AlertDialogTitle>
+                    <AlertDialogDescription>{i18n("Project-Delete")}</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{i18n("Cancel")}</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={async () => {
+                        const [newProjects, newGroups] = await Promise.all([
+                          (async () => {
+                            const newProjects = projects.filter(
+                              ({ path: source }) => source !== path
+                            );
+                            await window.Context.updateProjects(newProjects, path);
+                            return newProjects;
+                          })(),
+                          (async () => {
+                            const newGroups = [...groups];
+                            let needUpdate: boolean = false;
+                            newGroups.forEach((group) => {
+                              if (group.name === version) {
+                                needUpdate = true;
+                                const projects = [...group.projects];
+                                group.projects = projects.filter((proPath) => proPath !== path);
+                              }
+                            });
+                            needUpdate && (await window.Context.onGroupUpdate(newGroups));
+                            return needUpdate ? newGroups : undefined;
+                          })()
+                        ]);
+                        setProjects(newProjects);
+                        newGroups && setGroups(newGroups);
+                      }}
+                    >
+                      {i18n("OK")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <Button
+                size="sm"
+                variant="tag"
+                className="ml-1"
+                onClick={async () => {
+                  try {
+                    await window.Context.openExplorer(row.original.path);
+                  } catch (err) {
+                    toast.error(
+                      err.message
+                        ? err.message
+                            .split("Error invoking remote method 'open-explorer': ")
+                            .slice(-1)
+                        : "Something went wrong"
+                    );
+                  }
+                }}
+              >
+                <ExternalLinkIcon />
+                {i18n("OpenExplorer")}
+              </Button>
             </>
-           
-            
           );
         }
       }
