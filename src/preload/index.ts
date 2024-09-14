@@ -131,6 +131,9 @@ const electronHandler = {
     onThemeChanged = callback;
   },
 
+
+  openExplorer: (path: string) => ipcRenderer.invoke("open-explorer", path),
+
   // projects
   openFolderSelecter: ({
     title,

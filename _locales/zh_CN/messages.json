@@ -538,5 +538,13 @@
   "Disabled": {
     "message": "禁用",
     "description": "The text of the Disabled"
+  },
+  "OpenExplorer": {
+    "message": "打开",
+    "description": "The text of the OpenExplorer"
+  },
+  "PathNotExist": {
+    "message": "路径不存在",
+    "description": "The text of the PathNotExist"
   }
 }

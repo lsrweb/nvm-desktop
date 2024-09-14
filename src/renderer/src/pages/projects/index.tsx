@@ -113,7 +113,7 @@ export const Component: React.FC = () => {
       {
         accessorKey: "version",
         header: i18n("Version"),
-        maxSize: 200,
+        maxSize: 180,
         cell: ({ row }) => {
           const { version, path } = row.original;
           return (
@@ -203,17 +203,19 @@ export const Component: React.FC = () => {
       },
       {
         header: i18n("Operation"),
-        maxSize: 120,
+        maxSize: 140,
         cell: ({ row }) => {
           const { name, path, version } = row.original;
           return (
-            <AlertDialog>
+            <>
+             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button size="sm" variant="tag">
                   <TrashIcon />
                   {i18n("Remove")}
                 </Button>
               </AlertDialogTrigger>
+             
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>{name}</AlertDialogTitle>
@@ -254,6 +256,27 @@ export const Component: React.FC = () => {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+                <Button
+                  size="sm"
+                  variant="tag"
+                  onClick={async () => {
+                    try {
+                      await window.Context.openExplorer(row.original.path)
+                    } catch (err) {
+                      toast.error(
+                        err.message
+                          ? err.message.split("Error invoking remote method 'open-explorer': ").slice(-1)
+                          : "Something went wrong"
+                      );
+                    }
+                  }}
+                >
+                  <TrashIcon />
+                  {i18n("OpenExplorer")}
+                </Button>
+            </>
+           
+            
           );
         }
       }

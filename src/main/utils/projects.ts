@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { pathExists, readFile, readJson, writeJson, writeFile, remove } from "fs-extra";
+import { pathExists, readFile, readJson, writeJson, writeFile, remove,existsSync } from "fs-extra";
 import { PROJECTS_JSONFILE, NVMDRC_NAME } from "../constants";
 import { updateGroups } from "./groups";
 
@@ -101,4 +101,15 @@ export async function updateProjectAndSyncVersion({ projects, groupName, version
 
   await Promise.all(asyncVerions);
   return cacheProjects;
+}
+
+// open project directory in file explorer
+export async function openProjectDirectory(path: string) {
+  if (!(await pathExists(path))) return Promise.reject(new Error("Empty path"));
+  // validate path
+  if(!existsSync(path)) return Promise.reject(new Error("Path not found"));
+  // open in file explorer
+  const { exec } = await import("child_process");
+  exec(`start ${path}`);
+  return 200;
 }

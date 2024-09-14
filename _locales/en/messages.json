@@ -538,5 +538,9 @@
   "Disabled": {
     "message": "Disabled",
     "description": "The text of the Disabled"
+  },
+  "OpenExplorer": {
+    "message": "open explorer",
+    "description": "The text of the OpenExplorer"
   }
 }

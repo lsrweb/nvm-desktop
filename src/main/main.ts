@@ -23,6 +23,7 @@ import { setSetting, getSetting } from "./utils/setting";
 import {
   getProjects,
   getVersion,
+  openProjectDirectory,
   syncProjectVersion,
   updateProjectAndSyncVersion,
   updateProjects,
@@ -572,6 +573,10 @@ Promise.resolve().then(() => {
 
   ipcMain.on("get-system-theme", (event) => {
     event.returnValue = nativeTheme.shouldUseDarkColors ? "dark" : "light";
+  });
+
+  ipcMain.handle("open-explorer", async (_event, path: string) => {
+    return openProjectDirectory(path)
   });
 
   ipcMain.handle(
